@@ -1,0 +1,6 @@
+[
+  { "id": "royal_hunter", "name": "Кралски ловец", "hull": 100, "cannons": 18, "crew": 34, "goldReward": 410, "xpReward": 70 },
+  { "id": "pirate_raider", "name": "Пиратски разбойник", "hull": 75, "cannons": 15, "crew": 30, "goldReward": 250, "xpReward": 50 },
+  { "id": "ghost_galleon", "name": "Призрачен галеон", "hull": 145, "cannons": 24, "crew": 42, "goldReward": 880, "xpReward": 180 },
+  { "id": "merchant_fleet", "name": "Търговски флот", "hull": 92, "cannons": 12, "crew": 26, "goldReward": 500, "xpReward": 85 }
+]
