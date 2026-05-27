@@ -1,0 +1,7 @@
+[
+  { "id": "port_royal", "name": "Порт Роял", "type": "port", "danger": 0.12, "distance": 1, "description": "Голямо британско пристанище" },
+  { "id": "tortuga", "name": "Тортуга", "type": "port", "danger": 0.22, "distance": 1.2, "description": "Пиратско свърталище" },
+  { "id": "skull_island", "name": "Остров Череп", "type": "wild", "danger": 0.55, "distance": 1.8, "description": "Диви земи с пясъчни акули" },
+  { "id": "blue_lagoon", "name": "Синьо Лагуна", "type": "port", "danger": 0.18, "distance": 1.4, "description": "Скрита контрабандна база" },
+  { "id": "devil_triangle", "name": "Дяволския триъгълник", "type": "danger", "danger": 0.85, "distance": 2.5, "description": "Мистична зона, пълна с изчезнали кораби" }
+]
