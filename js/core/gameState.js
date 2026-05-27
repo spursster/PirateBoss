@@ -3,25 +3,29 @@ import { eventBus } from './eventBus.js';
 export const gameState = {
     player: {
         name: "Капитан Черния",
-        level: 1, xp: 0, xpNeeded: 110,
-        gold: 1350, reputation: 20,
-        crew: 32, maxCrew: 48,
+        level: 1,
+        xp: 0,
+        xpNeeded: 110,
+        gold: 1350,
+        reputation: 20,
+        crew: 32,
+        maxCrew: 48,
         ship: {
             name: "Морски Демон",
-            hull: 125, maxHull: 125,
-            cannons: 16, maxCannons: 28,
-            cargoLimit: 95, speed: 13
+            hull: 125,
+            maxHull: 125,
+            cannons: 16,
+            maxCannons: 28,
+            cargoLimit: 95,
+            speed: 13
         },
         supplies: { food: 110, rum: 42 },
         cargo: { sugar: 4, spice: 2, silk: 1, wood: 3 },
         upgrades: { armorPlating: 0, powderCharge: 0 }
     },
     world: {
-      world: {
-    currentLocation: "port_royal",   // беше "Порт Роял"
-    discoveredLocations: ["port_royal"],
-    // ...
-}
+        currentLocation: "port_royal",
+        discoveredLocations: ["port_royal"],   // <-- ЗАПЕТАЯТА Е ТУК!
         worldTime: 0,
         activeQuest: null,
         completedQuests: []
@@ -60,7 +64,3 @@ export const gameState = {
         eventBus.emit('state:changed');
     }
 };
-repairShip(amount) {
-    this.player.ship.hull = Math.min(this.player.ship.maxHull, this.player.ship.hull + amount);
-    eventBus.emit('state:changed');
-}
