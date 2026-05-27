@@ -1,580 +1,587 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bg">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>🦜 Пиратска Сага: Безкрайни Води | Giant Pirate Adventure RPG</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Pirate Boss · Гигантска пиратска стратегия</title>
     <style>
         * {
             box-sizing: border-box;
-            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background: linear-gradient(145deg, #030c1a 0%, #071c2c 100%);
-            font-family: 'Segoe UI', 'Cinema', 'Courier New', monospace;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
             margin: 0;
-            padding: 20px;
+            min-height: 100vh;
+            background: radial-gradient(circle at 20% 30%, #02111f, #01060c);
+            font-family: 'Segoe UI', 'Courier New', 'Roboto', system-ui, monospace;
+            padding: 16px;
         }
 
-        /* Главен контейнер - гигантска пиратска империя */
-        .game-container {
-            max-width: 1500px;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.65);
-            backdrop-filter: blur(2px);
+        /* Главен контейнер - напълно адаптивен */
+        .game-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(0, 5, 12, 0.75);
+            backdrop-filter: blur(4px);
             border-radius: 48px;
-            border: 3px solid #c9a03d;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.1);
-            padding: 20px;
+            border: 2px solid #c9a43b;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,215,120,0.2);
+            overflow: hidden;
             transition: all 0.2s;
         }
 
         /* Заглавие */
-        .pirate-header {
+        .boss-header {
             text-align: center;
-            font-size: 2.2rem;
-            font-weight: bold;
+            padding: 18px 12px 12px;
+            background: #030d15b3;
+            border-bottom: 2px solid #e2b13b;
+        }
+        .boss-header h1 {
+            margin: 0;
+            font-size: clamp(1.8rem, 8vw, 3.2rem);
             letter-spacing: 4px;
-            text-shadow: 4px 4px 0 #3a280b;
-            background: linear-gradient(135deg, #f7d975, #b87c2e);
+            background: linear-gradient(135deg, #ffd966, #b47c2e);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            border-bottom: 2px solid #cb9e5c;
-            margin-bottom: 20px;
-            padding-bottom: 8px;
+            text-shadow: 2px 2px 0 #1e2a1a;
+            font-weight: 900;
+        }
+        .boss-header p {
+            margin: 5px 0 0;
+            color: #e9c891;
+            font-size: 0.8rem;
         }
 
-        /* Stats панел */
-        .stats-panel {
+        /* Статистики - гъвкава мрежа */
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 12px;
-            background: #050e17cc;
-            border-radius: 30px;
-            padding: 15px 20px;
-            margin-bottom: 20px;
-            border: 1px solid #7a5a2e;
-            backdrop-filter: blur(4px);
-            font-weight: bold;
+            padding: 16px 20px;
+            background: #051018aa;
+            border-bottom: 1px solid #7a5d2e;
         }
-
         .stat-card {
-            background: #1f2a1e80;
-            padding: 8px 12px;
-            border-radius: 28px;
-            color: #ffefc0;
-            font-size: 1rem;
+            background: #0e1b1fc9;
+            border-radius: 60px;
+            padding: 8px 14px;
             display: flex;
             justify-content: space-between;
-            gap: 8px;
             flex-wrap: wrap;
-            border-left: 5px solid #e0ac5f;
-        }
-
-        .stat-label {
-            color: #c9ae6e;
-        }
-
-        .stat-value {
-            color: #f3cf7a;
             font-weight: bold;
+            color: #f7e5b5;
+            font-size: 0.9rem;
+            backdrop-filter: blur(2px);
+            border-left: 4px solid #e4aa4a;
+        }
+        .stat-label {
+            opacity: 0.85;
+        }
+        .stat-value {
+            color: #ffdd99;
+            font-family: monospace;
+            font-size: 1.1rem;
         }
 
-        /* Игрална зона: карти и действия */
-        .game-dashboard {
+        /* Двуколонна структура за голям екран, на малко -> колона */
+        .dashboard {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
-            margin-bottom: 20px;
+            padding: 20px;
         }
-
-        .map-adventure {
+        .map-panel {
             flex: 2;
-            min-width: 260px;
-            background: #0b1420b3;
-            border-radius: 32px;
-            border: 2px solid #aa7c42;
-            padding: 15px;
+            min-width: 240px;
+            background: #07121ed4;
+            border-radius: 40px;
+            padding: 18px;
+            border: 1px solid #b48b3a;
         }
-
         .action-panel {
             flex: 1.5;
-            min-width: 250px;
-            background: #0e1a1fb3;
-            border-radius: 32px;
-            border: 2px solid #8b693a;
-            padding: 15px;
+            min-width: 260px;
+            background: #07121ed4;
+            border-radius: 40px;
+            padding: 18px;
+            border: 1px solid #b48b3a;
         }
 
-        .combat-panel {
-            background: #2e1c14cc;
-            border-radius: 28px;
-            padding: 12px;
-            margin-top: 12px;
-            border: 1px solid #b87c2e;
-        }
-
-        .btn-group {
+        /* Бутони и контроли */
+        .button-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 15px;
-            margin-bottom: 15px;
+            gap: 12px;
+            margin: 15px 0 10px;
         }
-
         button {
             background: #2c2416;
-            border: 2px solid #dbb05c;
-            color: #fad97c;
+            border: none;
+            border-bottom: 3px solid #cf9f44;
+            color: #ffe1a0;
             font-weight: bold;
-            padding: 10px 15px;
+            padding: 10px 16px;
             border-radius: 60px;
             font-size: 0.85rem;
             cursor: pointer;
-            transition: 0.1s linear;
+            transition: 0.08s linear;
             font-family: monospace;
-            letter-spacing: 1px;
-            box-shadow: 0 3px 0 #3a2a10;
+            flex: 1 0 auto;
+            touch-action: manipulation;
         }
-
         button:active {
             transform: translateY(2px);
-            box-shadow: 0 1px 0 #3a2a10;
+            border-bottom-width: 1px;
         }
-
-        button:hover {
-            background: #4a3820;
-            border-color: #f5c46b;
-            color: #ffeaac;
+        @media (hover: hover) {
+            button:hover {
+                background: #4f3a22;
+                color: #ffefb9;
+            }
         }
-
         .combat-btn {
-            background: #631d1d;
-            border-color: #e08e3a;
+            background: #4e2a1f;
+            border-bottom-color: #cf6f3a;
         }
-
         .log-area {
-            background: #010a0fe6;
-            border-radius: 24px;
-            padding: 12px;
+            background: #010a0fe0;
+            border-radius: 28px;
+            padding: 14px;
             height: 180px;
             overflow-y: auto;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-family: monospace;
-            color: #d6d09b;
-            border-top: 2px solid #a9742e;
+            color: #dad28b;
+            margin-top: 15px;
+            border: 1px solid #7a602e;
         }
-
         .quest-card {
-            background: #182018b3;
-            border-radius: 24px;
+            background: #121d1cbf;
+            border-radius: 28px;
+            padding: 12px;
+            margin: 12px 0;
+        }
+        h3 {
+            margin: 0 0 10px 0;
+            color: #fdcd7a;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-left: 6px solid #ecb151;
+            padding-left: 12px;
+        }
+        .location-name {
+            background: #030f17;
+            border-radius: 60px;
+            text-align: center;
+            padding: 10px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #f5cf8b;
+            margin-bottom: 12px;
+        }
+        .enemy-box {
+            background: #2f241be0;
+            border-radius: 28px;
             padding: 12px;
             margin-top: 10px;
         }
-
-        h3 {
-            margin: 0 0 8px 0;
-            color: #eec97a;
-            font-size: 1.2rem;
-            border-left: 8px solid #c1943c;
-            padding-left: 12px;
-        }
-
         hr {
-            border-color: #7a592e;
+            border-color: #745e34;
         }
-
-        .enemy-stats {
-            background: #3a281bb3;
-            border-radius: 20px;
-            padding: 10px;
-            margin-top: 8px;
-        }
-
-        @media (max-width: 800px) {
-            .stat-card { font-size: 0.75rem; }
-            button { padding: 6px 10px; font-size: 0.7rem; }
+        @media (max-width: 680px) {
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .dashboard {
+                padding: 12px;
+            }
+            button {
+                padding: 8px 12px;
+                font-size: 0.75rem;
+            }
+            .stat-card {
+                font-size: 0.75rem;
+            }
         }
     </style>
 </head>
 <body>
-<div class="game-container" id="gameRoot">
-    <div class="pirate-header">☠️ ПИРАТСКА САГА: ПРОКЛЯТИЕТО НА ЗЛАТОТО ☠️</div>
+<div class="game-wrapper">
+    <div class="boss-header">
+        <h1>🏴‍☠️ PIRATE BOSS 🏴‍☠️</h1>
+        <p>Стратегия | Приключение | Морски битки</p>
+    </div>
 
-    <div class="stats-panel" id="statsPanel"></div>
+    <div class="stats-grid" id="statsPanel"></div>
 
-    <div class="game-dashboard">
-        <div class="map-adventure">
-            <h3>🏝️ СВЕТЪТ & ПЪТУВАНЕ</h3>
-            <div id="locationName" style="font-size:1.2rem; background:#010d12; border-radius: 20px; padding: 8px; text-align:center;">Порт Роял</div>
-            <div class="btn-group" id="travelButtons"></div>
-            <div id="specialLocationActions"></div>
-            <div class="combat-panel" id="combatSection" style="display:none;">
-                <h3>⚔️ МОРСКА БИТКА ⚔️</h3>
-                <div id="enemyStats"></div>
-                <div class="btn-group" id="combatActions"></div>
+    <div class="dashboard">
+        <!-- ЛЯВ ПАНЕЛ: СВЯТ И ПЪТУВАНЕ -->
+        <div class="map-panel">
+            <h3>🌍 КАРИБСКИ ВОДИ</h3>
+            <div class="location-name" id="locationName">Порт Роял</div>
+            <div class="button-group" id="travelButtons"></div>
+            <div id="combatZone" style="display:none;">
+                <div class="enemy-box" id="enemyStatsBox"></div>
+                <div class="button-group" id="combatControls"></div>
             </div>
         </div>
+
+        <!-- ДЕСЕН ПАНЕЛ: ДЕЙСТВИЯ, ЗАДАЧИ, ЛОГ -->
         <div class="action-panel">
-            <h3>🏴‍☠️ КАПИТАНСКИ ДЕЙСТВИЯ</h3>
-            <div class="btn-group" id="portActions"></div>
+            <h3>⚓ КАПИТАНСКИ ЗАПОВЕДИ</h3>
+            <div class="button-group" id="portButtons"></div>
             <div class="quest-card">
-                <h3>📜 АКТИВНА ЗАДАЧА</h3>
-                <div id="questDisplay">Търси съкровището на Дейви Джоунс</div>
-                <button id="completeQuestBtn" style="margin-top:8px;">🏆 Изпълни задача (ако е готова)</button>
+                <h3>📜 ТЕКУЩА ЗАДАЧА</h3>
+                <div id="questDesc">Търси съкровището на древния крал</div>
+                <button id="completeQuestBtn" style="margin-top: 10px; width:100%;">🏆 ЗАВЪРШИ ЗАДАЧА</button>
             </div>
-            <div class="log-area" id="logMessages">
-                ⚓ Добре дошъл, капитан! Слава и злато те очакват...<br>
-                🌊 Плавай до други острови, търгувай и избери съдбата си.
+            <div class="log-area" id="gameLog">
+                ⚓ Добре дошел, Pirate Boss!<br>
+                🌊 Плавай, търгувай и граби, за да станеш легенда.
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    // ======================== ГИГАНТСКА ПИРАТСКА RPG СТРУКТУРА ========================
-    // --- Player / Ship stats ---
+    // ====================== PIRATE BOSS - ГИГАНТСКА СТРАТЕГИЧЕСКА RPG ======================
+    // ----- ИГРАЧ И КОРАБ -----
     let player = {
-        name: "Черният Череп",
+        name: "Капитан Черния",
         level: 1,
         xp: 0,
-        xpNext: 100,
-        gold: 1250,
-        reputation: 0,   // 0-100 (влияе на цени и събития)
-        crew: 28,
-        maxCrew: 45,
+        xpNeeded: 110,
+        gold: 1350,
+        reputation: 20,     // влияе на цени
+        crew: 32,
+        maxCrew: 48,
         ship: {
-            name: "Отмъщението",
-            hull: 110,
-            maxHull: 110,
-            cannons: 14,
-            maxCannons: 24,
-            cargoSpace: 80,
-            speed: 12
+            name: "Морски Демон",
+            hull: 125,
+            maxHull: 125,
+            cannons: 16,
+            maxCannons: 28,
+            cargoLimit: 95,
+            speed: 13
         },
-        supplies: { food: 85, rum: 32 },   // храна за пътуване, ром за събития
-        cargo: { sugar: 6, spice: 3, silk: 1 },   // търговски стоки
-        upgrades: { hullArmor: 0, gunpowder: 0 }
+        supplies: { food: 110, rum: 42 },
+        cargo: { sugar: 4, spice: 2, silk: 1, wood: 3 },
+        upgrades: { armorPlating: 0, powderCharge: 0 }
     };
 
-    // Локации с координати и тип
+    // ----- ЛОКАЦИИ -----
     const locations = {
-        "Порт Роял": { type: "port", desc: "Британски форт, богат пазар", distance: 0, goodsMod: 1.0, danger: 0.1 },
-        "Тортуга": { type: "port", desc: "Разгулно пиратско пристанище", distance: 1, goodsMod: 0.85, danger: 0.25 },
-        "Остров Череп": { type: "wild", desc: "Диви брегове и засади", distance: 2, goodsMod: 1.2, danger: 0.6 },
-        "Затънтената лагуна": { type: "port", desc: "Тайна търговия с контрабанда", distance: 1.5, goodsMod: 0.7, danger: 0.4 },
-        "Дяволския триъгълник": { type: "danger", desc: "Мистично място, огромни рискове", distance: 3, goodsMod: 2.0, danger: 0.9 }
+        "Порт Роял": { type: "port", danger: 0.12, distance: 1, desc: "Голямо пристанище, чудесен пазар", tradeMod: 1.0 },
+        "Тортуга": { type: "port", danger: 0.22, distance: 1.2, desc: "Пиратско свърталище, евтини стоки", tradeMod: 0.85 },
+        "Остров Череп": { type: "wild", danger: 0.55, distance: 1.8, desc: "Диви земи, пълно с опасности", tradeMod: 1.3 },
+        "Синьо Лагуна": { type: "port", danger: 0.18, distance: 1.4, desc: "Скрито пристанище за контрабанда", tradeMod: 0.75 },
+        "Дяволския триъгълник": { type: "danger", danger: 0.85, distance: 2.5, desc: "Мистична зла, невероятни богатства", tradeMod: 2.2 }
     };
     let currentLocation = "Порт Роял";
-
-    // Активна битка
     let combatActive = false;
     let currentEnemy = null;
 
-    // Система за задачи (RPG епична)
+    // ----- КВЕСТ СИСТЕМА -----
     let activeQuest = {
-        id: "treasure_map",
-        name: "Съкровището на Морган",
-        description: "Намери древния артефакт в Дяволския триъгълник и продай за 800 злата.",
+        id: "treasure_of_el_dorado",
+        name: "Златото на Ел Дорадо",
+        description: "Намери древния идол в Дяволския триъгълник и го продай на търговец.",
         targetLocation: "Дяволския триъгълник",
-        rewardGold: 800,
-        rewardXP: 120,
+        rewardGold: 950,
+        rewardXp: 150,
         completed: false,
-        progressFlag: false
+        relicFound: false
     };
 
-    // Помощни функции за лог
+    // ----- helper лог -----
     function addLog(msg) {
-        const logDiv = document.getElementById("logMessages");
+        const logDiv = document.getElementById("gameLog");
         if(logDiv) {
-            const p = document.createElement("div");
-            p.innerHTML = `⚓ ${new Date().toLocaleTimeString().slice(0,5)} ➤ ${msg}`;
-            logDiv.appendChild(p);
+            const line = document.createElement("div");
+            line.innerHTML = `⚓ ${new Date().toLocaleTimeString().slice(0,5)} · ${msg}`;
+            logDiv.appendChild(line);
             logDiv.scrollTop = logDiv.scrollHeight;
-            while(logDiv.children.length > 25) logDiv.removeChild(logDiv.firstChild);
+            while(logDiv.children.length > 28) logDiv.removeChild(logDiv.firstChild);
         }
     }
 
-    // Update UI stats
-    function updateUI() {
-        const panel = document.getElementById("statsPanel");
-        if(panel){
-            panel.innerHTML = `
-                <div class="stat-card"><span class="stat-label">🏴 Капитан</span><span class="stat-value">${player.name} (Lv.${player.level})</span></div>
-                <div class="stat-card"><span class="stat-label">💰 Злато</span><span class="stat-value">${Math.floor(player.gold)}</span></div>
-                <div class="stat-card"><span class="stat-label">⚔️ Екипаж</span><span class="stat-value">${player.crew}/${player.maxCrew}</span></div>
-                <div class="stat-card"><span class="stat-label">⛵ Кораб</span><span class="stat-value">${player.ship.name} (📦трюм: ${getUsedCargo()}/${player.ship.cargoSpace})</span></div>
-                <div class="stat-card"><span class="stat-label">🔫 Топове</span><span class="stat-value">${player.ship.cannons}/${player.ship.maxCannons}</span></div>
-                <div class="stat-card"><span class="stat-label">🛡️ Здравина</span><span class="stat-value">${player.ship.hull}/${player.ship.maxHull}</span></div>
-                <div class="stat-card"><span class="stat-label">🍖 Пров. (храна/ром)</span><span class="stat-value">${player.supplies.food} / ${player.supplies.rum}</span></div>
-                <div class="stat-card"><span class="stat-label">✨ XP</span><span class="stat-value">${player.xp}/${player.xpNext}</span></div>
-            `;
-        }
-        document.getElementById("locationName").innerHTML = `📍 ${currentLocation} — ${locations[currentLocation]?.desc || "диви води"}`;
-        document.getElementById("questDisplay").innerHTML = activeQuest.completed ? "✅ Задача изпълнена! Намери нова в пристанище!" : `📌 ${activeQuest.name}<br>🎯 ${activeQuest.description}`;
-        renderPortActions();
-        renderTravelButtons();
-        if(!combatActive) document.getElementById("combatSection").style.display = "none";
-    }
-
-    function getUsedCargo() {
-        let total = (player.cargo.sugar||0)+(player.cargo.spice||0)+(player.cargo.silk||0);
+    // пресмята използван товар
+    function usedCargo() {
+        let total = (player.cargo.sugar||0)+(player.cargo.spice||0)+(player.cargo.silk||0)+(player.cargo.wood||0);
         return total;
     }
 
+    // обновява целия UI
+    function updateUI() {
+        const statsDiv = document.getElementById("statsPanel");
+        statsDiv.innerHTML = `
+            <div class="stat-card"><span class="stat-label">🏴‍☠️ Капитан</span><span class="stat-value">${player.name} (Lv.${player.level})</span></div>
+            <div class="stat-card"><span class="stat-label">💰 Злато</span><span class="stat-value">${Math.floor(player.gold)}</span></div>
+            <div class="stat-card"><span class="stat-label">⚔️ Екипаж</span><span class="stat-value">${player.crew}/${player.maxCrew}</span></div>
+            <div class="stat-card"><span class="stat-label">⛵ Кораб</span><span class="stat-value">${player.ship.name} (📦${usedCargo()}/${player.ship.cargoLimit})</span></div>
+            <div class="stat-card"><span class="stat-label">🔫 Топове</span><span class="stat-value">${player.ship.cannons}/${player.ship.maxCannons}</span></div>
+            <div class="stat-card"><span class="stat-label">🛡️ Здравина</span><span class="stat-value">${player.ship.hull}/${player.ship.maxHull}</span></div>
+            <div class="stat-card"><span class="stat-label">🍗 Провизии (храна/ром)</span><span class="stat-value">${player.supplies.food} / ${player.supplies.rum}</span></div>
+            <div class="stat-card"><span class="stat-label">✨ Опит</span><span class="stat-value">${player.xp}/${player.xpNeeded}</span></div>
+        `;
+        document.getElementById("locationName").innerHTML = `🏝️ ${currentLocation}<span style="font-size:0.7rem;"> — ${locations[currentLocation].desc}</span>`;
+        document.getElementById("questDesc").innerHTML = activeQuest.completed ? "✅ Задача изпълнена! Намери нова в пристанище." : `📌 ${activeQuest.name}<br>🎯 ${activeQuest.description}`;
+        renderPortActions();
+        renderTravelButtons();
+        if(!combatActive) document.getElementById("combatZone").style.display = "none";
+        else document.getElementById("combatZone").style.display = "block";
+    }
+
+    // ниване
     function checkLevelUp() {
-        if(player.xp >= player.xpNext) {
+        if(player.xp >= player.xpNeeded) {
             player.level++;
-            player.xp -= player.xpNext;
-            player.xpNext = Math.floor(player.xpNext * 1.3);
-            player.maxCrew += 4;
-            player.ship.maxHull += 12;
+            player.xp -= player.xpNeeded;
+            player.xpNeeded = Math.floor(player.xpNeeded * 1.28);
+            player.maxCrew += 5;
+            player.ship.maxHull += 15;
             player.ship.hull = player.ship.maxHull;
-            player.ship.maxCannons = Math.min(36, player.ship.maxCannons+2);
-            addLog(`🏆 ПОВИШЕНИЕ! Вече си ниво ${player.level}! Екипаж +4, корпус +12, топове +2 макс. АРИ!`);
+            player.ship.maxCannons = Math.min(38, player.ship.maxCannons+2);
+            addLog(`🏅 ПОВИШЕНИЕ! Вече си ниво ${player.level}! Екипаж +5, корпус +15, топове +2 макс.`);
             updateUI();
-            if(player.xp >= player.xpNext) checkLevelUp();
+            if(player.xp >= player.xpNeeded) checkLevelUp();
         }
     }
 
-    // ------ ПЪТУВАНЕ И СЛУЧАЙНИ СЪБИТИЯ ------
-    function travelTo(locName) {
-        if(combatActive) { addLog("В битка си! Не можеш да плаваш."); return; }
-        if(locName === currentLocation) { addLog("Вече си в това пристанище."); return; }
-        let dist = locations[locName].distance || 1;
-        let foodCost = Math.max(1, Math.floor(dist * 2 + (player.crew/15)));
-        if(player.supplies.food < foodCost) {
-            addLog(`🍞 Нямаш достатъчно храна! Нужни ${foodCost}, имаш ${player.supplies.food}. Купи храна!`);
-            return;
-        }
-        player.supplies.food -= foodCost;
-        addLog(`🌊 Отплава към ${locName}... (изразходвана храна: ${foodCost})`);
-
-        // Случайно събитие / морска битка
-        let danger = locations[locName].danger || 0.2;
-        let encounterRoll = Math.random();
-        if(encounterRoll < danger + 0.1) {
-            let enemyShip = generateEnemy();
-            addLog(`⚠️ НАПАДЕНИЕ! ${enemyShip.name} се задава от мъглата! БИТКА!`);
-            startCombat(enemyShip);
-        } else {
-            let randomEvent = Math.random();
-            if(randomEvent < 0.2) {
-                // Позитивно събитие
-                let foundGold = Math.floor(Math.random() * 120) + 40;
-                player.gold += foundGold;
-                addLog(`🍀 Късмет! Намери плаваща съкровищница! +${foundGold} злато.`);
-            } else if(randomEvent < 0.32) {
-                let lostCrew = Math.floor(Math.random() * 4) + 1;
-                player.crew = Math.max(5, player.crew - lostCrew);
-                addLog(`🌪️ Буря отнесе ${lostCrew} моряци! Екипажът намаля.`);
-            } else if(randomEvent < 0.4 && player.supplies.rum > 0) {
-                let rumUsed = Math.min(3, player.supplies.rum);
-                player.supplies.rum -= rumUsed;
-                player.crew = Math.min(player.maxCrew, player.crew+2);
-                addLog(`🍻 Ромово вдъхновение! +2 morale и 2-ма нови пирати се присъединиха.`);
-            }
-        }
-        currentLocation = locName;
-        checkQuestProgress();
-        updateUI();
-        if(!combatActive) addLog(`🚢 Пристигна в ${currentLocation}.`);
-    }
-
+    // ---- ГЕНЕРИРАНЕ НА ВРАГ ----
     function generateEnemy() {
-        let variants = [
-            { name: "Кралски фрегат", hull: 95, cannons: 18, crew: 32, goldReward: 380, xpReward: 65, lootBase: 120 },
-            { name: "Пиратски бриг", hull: 70, cannons: 14, crew: 28, goldReward: 220, xpReward: 45, lootBase: 80 },
-            { name: "Летящият холандец (призрак)", hull: 130, cannons: 22, crew: 40, goldReward: 720, xpReward: 150, lootBase: 300 },
-            { name: "Търговски галеон", hull: 88, cannons: 10, crew: 22, goldReward: 450, xpReward: 70, lootBase: 200 }
+        const enemies = [
+            { name: "Кралски ловец", hull: 100, cannons: 18, crew: 34, goldReward: 410, xpReward: 70, lootExtra: 90 },
+            { name: "Пиратски разбойник", hull: 75, cannons: 15, crew: 30, goldReward: 250, xpReward: 50, lootExtra: 75 },
+            { name: "Призрачен галеон", hull: 145, cannons: 24, crew: 42, goldReward: 880, xpReward: 180, lootExtra: 310 },
+            { name: "Търговски флот", hull: 92, cannons: 12, crew: 26, goldReward: 500, xpReward: 85, lootExtra: 160 }
         ];
-        let idx = Math.floor(Math.random() * variants.length);
-        let e = {...variants[idx]};
-        e.currentHull = e.hull;
-        e.currentCrew = e.crew;
-        return e;
+        let chosen = {...enemies[Math.floor(Math.random()*enemies.length)]};
+        chosen.currentHull = chosen.hull;
+        chosen.currentCrew = chosen.crew;
+        return chosen;
     }
 
-    // БОЙНА СИСТЕМА (стратегическа)
+    // ---------- БОЙНА СИСТЕМА ----------
     function startCombat(enemy) {
         combatActive = true;
         currentEnemy = enemy;
-        document.getElementById("combatSection").style.display = "block";
         renderCombatUI();
+        addLog(`⚔️ БИТКА! ${enemy.name} напада!`);
     }
 
     function renderCombatUI() {
         if(!currentEnemy) return;
-        const enemyDiv = document.getElementById("enemyStats");
-        enemyDiv.innerHTML = `<div class="enemy-stats">☠️ ВРАГ: ${currentEnemy.name} ☠️<br>
-        🛡️ Корпус: ${currentEnemy.currentHull}/${currentEnemy.hull}<br>
-        ⚔️ Екипаж: ${currentEnemy.currentCrew}/${currentEnemy.crew}<br>
-        🔫 Топове: ${currentEnemy.cannons}</div>`;
-        const combatActionsDiv = document.getElementById("combatActions");
-        combatActionsDiv.innerHTML = `
-            <button class="combat-btn" id="combatFire">🔥 Гръмни с топове!</button>
-            <button class="combat-btn" id="combatBoard">🏴‍☠️ Абордаж!</button>
-            <button class="combat-btn" id="combatRepair">🛠️ Бърз ремонт (20 злато)</button>
-            <button class="combat-btn" id="combatFlee">💨 Бягство</button>
+        document.getElementById("enemyStatsBox").innerHTML = `
+            <div style="font-weight:bold;">☠️ ${currentEnemy.name}</div>
+            <div>🏴 Корпус: ${currentEnemy.currentHull}/${currentEnemy.hull}</div>
+            <div>👥 Екипаж: ${currentEnemy.currentCrew}/${currentEnemy.crew}</div>
+            <div>🔫 Топове: ${currentEnemy.cannons}</div>
         `;
-        document.getElementById("combatFire")?.addEventListener("click", combatFire);
-        document.getElementById("combatBoard")?.addEventListener("click", combatBoard);
-        document.getElementById("combatRepair")?.addEventListener("click", combatRepair);
-        document.getElementById("combatFlee")?.addEventListener("click", combatFlee);
+        const combatDiv = document.getElementById("combatControls");
+        combatDiv.innerHTML = `
+            <button class="combat-btn" id="cannonBtn">🔥 ТОПОВЕ</button>
+            <button class="combat-btn" id="boardBtn">🏴‍☠️ АБОРДАЖ</button>
+            <button class="combat-btn" id="repairBtn">🛠️ РЕМОНТ (35💰)</button>
+            <button class="combat-btn" id="fleeBtn">💨 БЯГСТВО</button>
+        `;
+        document.getElementById("cannonBtn")?.addEventListener("click", combatCannon);
+        document.getElementById("boardBtn")?.addEventListener("click", combatBoard);
+        document.getElementById("repairBtn")?.addEventListener("click", combatRepair);
+        document.getElementById("fleeBtn")?.addEventListener("click", combatFlee);
     }
 
-    function combatFire() {
+    function combatCannon() {
         if(!combatActive) return;
-        let playerDamage = Math.floor((player.ship.cannons * 4) + (Math.random() * 15) + (player.level * 2));
-        let enemyDamage = Math.floor((currentEnemy.cannons * 3.5) + (Math.random() * 12));
+        let playerDamage = Math.floor((player.ship.cannons * 4.5) + Math.random() * 18 + (player.level*1.5));
+        let enemyDamage = Math.floor((currentEnemy.cannons * 3.8) + Math.random() * 15);
         currentEnemy.currentHull -= playerDamage;
         player.ship.hull -= enemyDamage;
-        addLog(`💥 Вашите топове нанасят ${playerDamage} щети! Врагът ви удря с ${enemyDamage}!`);
-        if(player.ship.hull <= 0) { defeatCombat(); return; }
-        if(currentEnemy.currentHull <= 0) { victoryCombat(); return; }
-        // enemy counterattack (crew loss)
-        let crewLoss = Math.floor(Math.random() * 6) + 2;
-        player.crew = Math.max(1, player.crew - crewLoss);
-        addLog(`⚔️ Вражеските стрелци убиха ${crewLoss} от екипажа!`);
-        if(player.crew <= 0) { defeatCombat(); return; }
-        renderCombatUI();
+        addLog(`💥 Вашите топове нанасят ${playerDamage} щети! Врагът отвръща с ${enemyDamage}!`);
+        if(player.ship.hull <= 0) return defeatCombat();
+        if(currentEnemy.currentHull <= 0) return victoryCombat();
+        let crewLoss = Math.floor(Math.random() * 5) + 2;
+        player.crew = Math.max(2, player.crew - crewLoss);
+        addLog(`🏹 Загубени ${crewLoss} моряци от ответен огън!`);
+        if(player.crew <= 0) defeatCombat();
+        else renderCombatUI();
         updateUI();
     }
-
     function combatBoard() {
         if(!combatActive) return;
-        let playerPower = player.crew * (1 + player.level * 0.2);
-        let enemyPower = currentEnemy.currentCrew * 0.9;
-        let roll = Math.random();
-        if(playerPower > enemyPower + (roll * 15)) {
-            addLog("🏴‍☠️ Успешен абордаж! Унищожавате вражеския капитан!");
+        let power = (player.crew + player.level*2) * (Math.random()*0.6 + 0.7);
+        let enemyPower = currentEnemy.currentCrew * 1.0;
+        if(power > enemyPower) {
+            addLog("🏴‍☠️ УСПЕШЕН АБОРДАЖ! Врагът е разбит!");
             victoryCombat();
         } else {
-            let loss = Math.floor(Math.random() * 12) + 5;
-            player.crew = Math.max(1, player.crew - loss);
-            addLog(`😭 Провален абордаж! Загубихте ${loss} души!`);
+            let loss = Math.floor(Math.random() * 14) + 6;
+            player.crew = Math.max(2, player.crew - loss);
+            addLog(`😵 Абордажът се проваля! Губите ${loss} души.`);
             if(player.crew <= 0) defeatCombat();
             else {
-                let counter = Math.floor(Math.random() * 15);
+                let counter = Math.floor(Math.random() * 20);
                 player.ship.hull -= counter;
-                addLog(`🧨 Вражески отговор: корпусът пострада с ${counter}`);
+                addLog(`💢 Вражеска контраатака: -${counter} корпус`);
                 if(player.ship.hull <= 0) defeatCombat();
+                else renderCombatUI();
             }
         }
-        renderCombatUI(); updateUI();
+        updateUI();
     }
-
     function combatRepair() {
-        if(player.gold < 20) { addLog("Нямаш злато за ремонт!"); return; }
-        player.gold -= 20;
-        let repair = Math.floor(Math.random() * 25) + 15;
+        if(player.gold < 35) { addLog("Нямаш 35 злато за ремонт!"); return; }
+        player.gold -= 35;
+        let repair = Math.floor(Math.random() * 28) + 18;
         player.ship.hull = Math.min(player.ship.maxHull, player.ship.hull + repair);
-        addLog(`🔧 Ремонт! Възстановени ${repair} точки корпус.`);
-        // врагът атакува докато ремонтираш
+        addLog(`🔧 Ремонт +${repair} корпус.`);
         let punish = Math.floor(Math.random() * 18);
         player.ship.hull -= punish;
-        addLog(`💢 Врагът ви атакува по време на ремонт! -${punish} корпус.`);
+        addLog(`⚡ Врагът се възползва: -${punish} корпус.`);
         if(player.ship.hull <= 0) defeatCombat();
-        renderCombatUI(); updateUI();
+        else renderCombatUI();
+        updateUI();
     }
-
     function combatFlee() {
-        let chance = 0.4 + (player.ship.speed / 40) + (player.level * 0.05);
+        let chance = 0.45 + (player.ship.speed / 35) + (player.level * 0.04);
         if(Math.random() < chance) {
-            addLog("🏃‍♂️ Успя да избягаш! Битката приключи.");
+            addLog("🏃‍♂️ Успяваш да избягаш от битката!");
             endCombat();
         } else {
-            addLog("❌ Опитът за бягство провален! Врагът нанася тежък удар!");
-            let dmg = Math.floor(Math.random() * 35) + 10;
+            addLog("❌ Бягството се проваля! Врагът атакува жестоко!");
+            let dmg = Math.floor(Math.random() * 32) + 12;
             player.ship.hull -= dmg;
             if(player.ship.hull <= 0) defeatCombat();
             else renderCombatUI();
             updateUI();
         }
     }
-
     function victoryCombat() {
-        addLog(`🏆 ПОБЕДА! Потушихте ${currentEnemy.name}!`);
-        let goldGain = currentEnemy.goldReward + Math.floor(Math.random() * 100);
-        let xpGain = currentEnemy.xpReward + Math.floor(Math.random() * 30);
+        addLog(`🏆 ПОБЕДА! Унищожихте ${currentEnemy.name}!`);
+        let goldGain = currentEnemy.goldReward + Math.floor(Math.random() * 130);
+        let xpGain = currentEnemy.xpReward + Math.floor(Math.random() * 40);
         player.gold += goldGain;
         player.xp += xpGain;
         addLog(`💰 +${goldGain} злато, +${xpGain} опит.`);
-        let lootCargo = Math.floor(Math.random() * 4);
-        if(lootCargo > 0) {
-            player.cargo.sugar = (player.cargo.sugar || 0) + Math.floor(Math.random() * 3);
-            addLog(`📦 Плячка: захарен тръстик добавен в трюма.`);
-        }
+        let lootRoll = Math.random();
+        if(lootRoll > 0.6) { player.cargo.wood = (player.cargo.wood||0)+Math.floor(Math.random()*4)+1; addLog("📦 Намерени дърва за ремонт!"); }
+        if(lootRoll > 0.8) { player.cargo.spice = (player.cargo.spice||0)+1; addLog("🌶️ Плячка: подправки"); }
         checkLevelUp();
         endCombat();
     }
-
     function defeatCombat() {
-        addLog(`💀 ЗАГУБА! Корабът ви е унищожен... Оцелелите се спасяват, но губите половината си злато и стоки.`);
+        addLog(`💀 ПОРАЖЕНИЕ! Корабът е разбит... Оцелелите губят половината злато и част от стоките.`);
         player.gold = Math.floor(player.gold * 0.5);
-        player.cargo = { sugar: Math.floor((player.cargo.sugar||0)/2), spice: Math.floor((player.cargo.spice||0)/2), silk: Math.floor((player.cargo.silk||0)/2) };
+        player.cargo = { sugar: Math.floor((player.cargo.sugar||0)/2), spice: Math.floor((player.cargo.spice||0)/2), silk: Math.floor((player.cargo.silk||0)/2), wood: Math.floor((player.cargo.wood||0)/2) };
         player.ship.hull = Math.max(20, Math.floor(player.ship.maxHull * 0.4));
         player.crew = Math.max(8, Math.floor(player.crew * 0.6));
-        player.supplies.food = Math.max(8, player.supplies.food-10);
-        addLog("Оцеляваш на сал и достигаш до най-близкото пристанище.");
+        player.supplies.food = Math.max(12, player.supplies.food - 12);
         currentLocation = "Порт Роял";
         endCombat();
         updateUI();
+        addLog("Спасяваш се до Порт Роял...");
     }
-
     function endCombat() {
         combatActive = false;
         currentEnemy = null;
-        document.getElementById("combatSection").style.display = "none";
+        document.getElementById("combatZone").style.display = "none";
         updateUI();
     }
 
-    // ПОРТОВИ ДЕЙСТВИЯ: търговия, надстройки, наемане и ремонт
+    // ----- ПЪТУВАНЕ -----
+    function travelTo(locName) {
+        if(combatActive) { addLog("В битка си, не можеш да плаваш!"); return; }
+        if(locName === currentLocation) return;
+        let dist = locations[locName].distance || 1;
+        let foodCost = Math.max(1, Math.floor(dist * 2.5 + player.crew/12));
+        if(player.supplies.food < foodCost) { addLog(`Недостиг на храна! Трябват ${foodCost}, имаш ${player.supplies.food}.`); return; }
+        player.supplies.food -= foodCost;
+        addLog(`🌊 Отплаване към ${locName} (храна -${foodCost})`);
+
+        let danger = locations[locName].danger;
+        if(Math.random() < danger + 0.08) {
+            let enemy = generateEnemy();
+            addLog(`⚠️ СРЕЩА В МОРЕТО! ${enemy.name} напада!`);
+            startCombat(enemy);
+        } else {
+            let eventRand = Math.random();
+            if(eventRand < 0.18) {
+                let bonus = Math.floor(Math.random() * 140) + 30;
+                player.gold += bonus;
+                addLog(`🍀 Плаващ съд с плячка! +${bonus} злато.`);
+            } else if(eventRand < 0.32) {
+                let lossC = Math.floor(Math.random() * 5)+1;
+                player.crew = Math.max(4, player.crew-lossC);
+                addLog(`🌪️ Буря отне ${lossC} моряци.`);
+            } else if(eventRand < 0.44 && player.supplies.rum > 2) {
+                player.supplies.rum -= 2;
+                player.crew = Math.min(player.maxCrew, player.crew+3);
+                addLog(`🍻 Ромов пир! +3 пирати в екипажа.`);
+            }
+        }
+        currentLocation = locName;
+        checkQuestProgress();
+        updateUI();
+        if(!combatActive) addLog(`✅ Пристигнахте в ${currentLocation}.`);
+    }
+    function checkQuestProgress() {
+        if(!activeQuest.completed && activeQuest.targetLocation === currentLocation && !activeQuest.relicFound && activeQuest.id === "treasure_of_el_dorado") {
+            activeQuest.relicFound = true;
+            addLog(`🔱 Намерихте древния идол в ${currentLocation}! Върнете се в пристанище за да завършите задачата.`);
+        }
+    }
+
+    // ----- ПОРТОВИ ДЕЙСТВИЯ (търговия, надстройки) -----
     function renderPortActions() {
-        let portDiv = document.getElementById("portActions");
+        let portDiv = document.getElementById("portButtons");
         if(!portDiv) return;
-        if(locations[currentLocation]?.type === "port" || currentLocation === "Тортуга" || currentLocation === "Затънтената лагуна") {
+        if(locations[currentLocation]?.type === "port" || currentLocation === "Тортуга" || currentLocation === "Синьо Лагуна" || currentLocation === "Порт Роял") {
             portDiv.innerHTML = `
-                <button id="tradeBtn">📦 ТЪРГОВИЯ (пазар)</button>
-                <button id="recruitBtn">🍺 НАЕМИ ЕКИПАЖ (50 злато +5 crew)</button>
-                <button id="repairShipBtn">🛠️ РЕМОНТ (40 злато +40 корпус)</button>
-                <button id="upgradeCannonsBtn">🔫 НАДГРАДИ ТОПОВЕ (300 злато +2 топ/макс)</button>
-                <button id="buySuppliesBtn">🍖 КУПИ ПРОВИЗИИ (храна+ром 100 злато)</button>
+                <button id="tradeAct">📦 ТЪРГОВИЯ</button>
+                <button id="hireCrew">⚓ НАЕМИ ЕКИПАЖ (60💰 +5 души)</button>
+                <button id="repairShip">🔧 РЕМОНТ (45💰 +45 корпус)</button>
+                <button id="upgradeCannons">🔫 НАДГРАДИ ТОПОВЕ (380💰 +2 топове)</button>
+                <button id="buyRumFood">🍖 КУПИ ПРОВИЗИИ (90💰 +40 храна, +20 ром)</button>
             `;
-            document.getElementById("tradeBtn")?.addEventListener("click", openTradeMenu);
-            document.getElementById("recruitBtn")?.addEventListener("click", () => {
-                if(player.gold>=50 && player.crew<player.maxCrew) { player.gold-=50; player.crew = Math.min(player.maxCrew, player.crew+5); addLog("5 нови пирати се присъединиха!"); updateUI();}
-                else addLog("Нямаш злато или екипажът е пълен!");
+            document.getElementById("tradeAct")?.addEventListener("click", openTradeMenu);
+            document.getElementById("hireCrew")?.addEventListener("click", () => {
+                if(player.gold >= 60 && player.crew < player.maxCrew) { player.gold -= 60; player.crew = Math.min(player.maxCrew, player.crew+5); addLog("5 нови пирати се присъединиха!"); updateUI();}
+                else addLog("Нямаш злато или екипаж пълен");
             });
-            document.getElementById("repairShipBtn")?.addEventListener("click", () => {
-                if(player.gold>=40) { player.gold-=40; player.ship.hull = Math.min(player.ship.maxHull, player.ship.hull+40); addLog("Корабът е ремонтиран!"); updateUI();}
-                else addLog("Недостатъчно злато!");
+            document.getElementById("repairShip")?.addEventListener("click", () => {
+                if(player.gold >= 45) { player.gold -= 45; player.ship.hull = Math.min(player.ship.maxHull, player.ship.hull+45); addLog("Ремонт успешен!"); updateUI();}
+                else addLog("Недостатъчно злато");
             });
-            document.getElementById("upgradeCannonsBtn")?.addEventListener("click", () => {
-                if(player.gold>=300 && player.ship.cannons < player.ship.maxCannons) { player.gold-=300; player.ship.cannons = Math.min(player.ship.maxCannons, player.ship.cannons+2); addLog("Топовете са надградени!"); updateUI();}
-                else addLog("Нямаш злато или си на максимум!");
+            document.getElementById("upgradeCannons")?.addEventListener("click", () => {
+                if(player.gold >= 380 && player.ship.cannons < player.ship.maxCannons) { player.gold -= 380; player.ship.cannons = Math.min(player.ship.maxCannons, player.ship.cannons+2); addLog("Топовете са подобрени!"); updateUI();}
+                else addLog("Нямаш пари или си на максимум");
             });
-            document.getElementById("buySuppliesBtn")?.addEventListener("click", () => {
-                if(player.gold>=100){ player.gold-=100; player.supplies.food+=40; player.supplies.rum+=20; addLog("Добавени храна +40, ром +20."); updateUI();}
-                else addLog("Нямаш 100 злато!");
+            document.getElementById("buyRumFood")?.addEventListener("click", () => {
+                if(player.gold >= 90) { player.gold -= 90; player.supplies.food += 40; player.supplies.rum += 20; addLog("Заредени провизии +40 храна, +20 ром"); updateUI();}
+                else addLog("Нужни 90 злато");
             });
         } else {
-            portDiv.innerHTML = `<button disabled>🌊 Див бряг - няма търговия, само битки</button>`;
+            portDiv.innerHTML = `<button disabled>🏝️ Див бряг - няма пристанищни услуги</button>`;
         }
     }
 
     function openTradeMenu() {
-        let sugarPrice = Math.floor(18 + Math.random() * 12);
-        let spicePrice = 27 + Math.floor(Math.random()*15);
-        let silkPrice = 65 + Math.floor(Math.random()*30);
-        let gold = player.gold;
-        let action = prompt(`📊 ПАЗАР (${currentLocation}) \n Захар: ${sugarPrice} злато (имаш: ${player.cargo.sugar||0})\n Подправки: ${spicePrice} злато (имаш: ${player.cargo.spice||0})\n Коприна: ${silkPrice} злато (имаш: ${player.cargo.silk||0})\n\nНапишете "купи захар 5" или "продай подправки 3" / "продай всичко" :`);
+        let sugarPrice = 14 + Math.floor(Math.random() * 14);
+        let spicePrice = 24 + Math.floor(Math.random() * 18);
+        let silkPrice = 70 + Math.floor(Math.random() * 40);
+        let woodPrice = 8 + Math.floor(Math.random() * 7);
+        let msg = `📊 ПАЗАР (${currentLocation})\n
+Захар: ${sugarPrice}💰 (имаш: ${player.cargo.sugar||0})
+Подправки: ${spicePrice}💰 (имаш: ${player.cargo.spice||0})
+Коприна: ${silkPrice}💰 (имаш: ${player.cargo.silk||0})
+Дърво: ${woodPrice}💰 (имаш: ${player.cargo.wood||0})
+\nФормат: "купи захар 3" или "продай подправки 2" / "продай всичко"`;
+        let action = prompt(msg);
         if(!action) return;
         let parts = action.toLowerCase().split(" ");
         if(parts[0] === "купи" && parts[2]) {
@@ -585,37 +592,46 @@
             if(item === "захар") cost = sugarPrice*qty;
             else if(item === "подправки") cost = spicePrice*qty;
             else if(item === "коприна") cost = silkPrice*qty;
+            else if(item === "дърво") cost = woodPrice*qty;
             else { addLog("Невалидна стока"); return; }
-            if(cost <= player.gold && (getUsedCargo()+qty) <= player.ship.cargoSpace) {
+            if(cost <= player.gold && (usedCargo()+qty) <= player.ship.cargoLimit) {
                 player.gold -= cost;
                 if(item === "захар") player.cargo.sugar = (player.cargo.sugar||0)+qty;
-                if(item === "подправки") player.cargo.spice = (player.cargo.spice||0)+qty;
-                if(item === "коприна") player.cargo.silk = (player.cargo.silk||0)+qty;
-                addLog(`Купено ${qty} ${item} за ${cost} злато.`);
+                else if(item === "подправки") player.cargo.spice = (player.cargo.spice||0)+qty;
+                else if(item === "коприна") player.cargo.silk = (player.cargo.silk||0)+qty;
+                else if(item === "дърво") player.cargo.wood = (player.cargo.wood||0)+qty;
+                addLog(`Купено ${qty} ${item} за ${cost}💰.`);
             } else addLog("Няма място или пари!");
-        }
-        else if(parts[0] === "продай" && parts[2]) {
+        } else if(parts[0] === "продай" && parts[2]) {
             let item = parts[1];
             let qty = parseInt(parts[2]);
-            let have = (item==="захар"?player.cargo.sugar:item==="подправки"?player.cargo.spice:player.cargo.silk)||0;
-            if(qty > have) { addLog("Нямаш толкова стока!"); return; }
-            let income = 0;
-            if(item === "захар") income = sugarPrice*qty*0.7;
-            else if(item === "подправки") income = spicePrice*qty*0.7;
-            else income = silkPrice*qty*0.7;
-            player.gold += Math.floor(income);
+            let have = 0;
+            if(item === "захар") have = player.cargo.sugar||0;
+            else if(item === "подправки") have = player.cargo.spice||0;
+            else if(item === "коприна") have = player.cargo.silk||0;
+            else if(item === "дърво") have = player.cargo.wood||0;
+            if(qty > have) { addLog("Нямаш толкова"); return; }
+            let price = 0;
+            if(item === "захар") price = Math.floor(sugarPrice*0.65);
+            else if(item === "подправки") price = Math.floor(spicePrice*0.65);
+            else if(item === "коприна") price = Math.floor(silkPrice*0.65);
+            else price = Math.floor(woodPrice*0.7);
+            let income = price * qty;
+            player.gold += income;
             if(item === "захар") player.cargo.sugar -= qty;
-            if(item === "подправки") player.cargo.spice -= qty;
-            if(item === "коприна") player.cargo.silk -= qty;
-            addLog(`Продадено ${qty} ${item} за ${Math.floor(income)} злато.`);
+            else if(item === "подправки") player.cargo.spice -= qty;
+            else if(item === "коприна") player.cargo.silk -= qty;
+            else if(item === "дърво") player.cargo.wood -= qty;
+            addLog(`Продадено ${qty} ${item} за ${income}💰`);
         } else if(action === "продай всичко") {
-            let totalVal = 0;
-            totalVal += (player.cargo.sugar||0)*sugarPrice*0.7;
-            totalVal += (player.cargo.spice||0)*spicePrice*0.7;
-            totalVal += (player.cargo.silk||0)*silkPrice*0.7;
-            player.gold += Math.floor(totalVal);
-            player.cargo = { sugar:0, spice:0, silk:0 };
-            addLog(`Продадохте целия товар за ${Math.floor(totalVal)} злато!`);
+            let total = 0;
+            total += (player.cargo.sugar||0)*Math.floor(sugarPrice*0.65);
+            total += (player.cargo.spice||0)*Math.floor(spicePrice*0.65);
+            total += (player.cargo.silk||0)*Math.floor(silkPrice*0.65);
+            total += (player.cargo.wood||0)*Math.floor(woodPrice*0.7);
+            player.gold += total;
+            player.cargo = { sugar:0, spice:0, silk:0, wood:0 };
+            addLog(`Продаден целият товар за ${total}💰!`);
         }
         updateUI();
     }
@@ -631,30 +647,24 @@
         }
     }
 
-    function checkQuestProgress() {
-        if(!activeQuest.completed && activeQuest.targetLocation === currentLocation && activeQuest.id === "treasure_map" && !activeQuest.progressFlag) {
-            activeQuest.progressFlag = true;
-            addLog(`🏝️ Открихте древния артефакт в ${currentLocation}! Върнете се в пристанище за награда.`);
-        }
-    }
-
+    // ----- КВЕСТ ЗАВЪРШВАНЕ -----
     document.getElementById("completeQuestBtn")?.addEventListener("click", () => {
-        if(activeQuest.completed) { addLog("Задачата вече е завършена! Очаквай нова."); return; }
-        if(activeQuest.progressFlag) {
+        if(activeQuest.completed) { addLog("Задачата вече е завършена!"); return; }
+        if(activeQuest.relicFound) {
             player.gold += activeQuest.rewardGold;
-            player.xp += activeQuest.rewardXP;
-            addLog(`✨ ЗАДАЧА ИЗПЪЛНЕНА! +${activeQuest.rewardGold} злато, +${activeQuest.rewardXP} опит. Слава за теб!`);
+            player.xp += activeQuest.rewardXp;
+            addLog(`🏆 ЗАДАЧА ИЗПЪЛНЕНА! +${activeQuest.rewardGold}💰, +${activeQuest.rewardXp} опит.`);
             activeQuest.completed = true;
             checkLevelUp();
             updateUI();
         } else {
-            addLog(`Задачата още не е изпълнена. Трябва да стигнеш до ${activeQuest.targetLocation} и да намериш артефакта!`);
+            addLog(`Задачата изисква да намерите артефакта в ${activeQuest.targetLocation}.`);
         }
     });
 
-    // Старт на играта
+    // инициализация
     updateUI();
-    addLog("🤴 Гигантска пиратска стратегическа RPG е готова! Управлявай кораба, търгувай, воювай и стани крал на пиратите!");
+    addLog("🏴‍☠️ Pirate Boss е тук! Плавай, търгувай, победи всички врагове и стани крал на пиратите!");
 </script>
 </body>
 </html>
