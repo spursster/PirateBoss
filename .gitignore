@@ -1,0 +1,18 @@
+# macOS
+.DS_Store
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# временни файлове на сървъра
+*.log
+*.tmp
+
+# резервни копия
+*.bak
+*.old
+
+# ако ползваш някакви build tools (не са задължителни)
+node_modules/
+dist/
