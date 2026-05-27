@@ -60,3 +60,7 @@ export const gameState = {
         eventBus.emit('state:changed');
     }
 };
+repairShip(amount) {
+    this.player.ship.hull = Math.min(this.player.ship.maxHull, this.player.ship.hull + amount);
+    eventBus.emit('state:changed');
+}
