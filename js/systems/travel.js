@@ -16,7 +16,7 @@ export function initTravelSystem() {
             return;
         }
         gameState.player.supplies.food -= foodCost;
-        gameState.world.currentLocation = loc.name;
+        gameState.world.currentLocation = loc.id;
         eventBus.emit('travel:arrived', loc.name);
         eventBus.emit('state:changed');
         
