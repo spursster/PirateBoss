@@ -17,8 +17,11 @@ export const gameState = {
         upgrades: { armorPlating: 0, powderCharge: 0 }
     },
     world: {
-        currentLocation: "Порт Роял",
-        discoveredLocations: ["Порт Роял"],
+      world: {
+    currentLocation: "port_royal",   // беше "Порт Роял"
+    discoveredLocations: ["port_royal"],
+    // ...
+}
         worldTime: 0,
         activeQuest: null,
         completedQuests: []
