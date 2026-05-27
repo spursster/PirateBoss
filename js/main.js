@@ -10,7 +10,7 @@ async function bootstrap() {
     await dataLoader.loadAll();
     initUI();
     initCombatSystem();
-    // initTravelSystem();
+    initTravelSystem();
     saveManager.load('auto');
     eventBus.emit('game:ready');
     console.log("Pirate Boss е жив!");
