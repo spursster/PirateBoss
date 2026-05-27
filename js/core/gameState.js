@@ -1,8 +1,6 @@
-// js/core/gameState.js
 import { eventBus } from './eventBus.js';
 
 export const gameState = {
-    // Играч и кораб
     player: {
         name: "Капитан Черния",
         level: 1, xp: 0, xpNeeded: 110,
@@ -21,25 +19,41 @@ export const gameState = {
     world: {
         currentLocation: "Порт Роял",
         discoveredLocations: ["Порт Роял"],
-        worldTime: 0,  // дни
-        activeQuests: [],   // обекти на задачи
+        worldTime: 0,
+        activeQuest: null,
         completedQuests: []
     },
-    flags: {},   // за специални събития (напр. "met_ghost_ship": true)
+    flags: {},
 
-    // методи за промяна с автоматично излъчване на събития
     setGold(amount) {
         this.player.gold = Math.max(0, amount);
         eventBus.emit('gold:changed', this.player.gold);
+        eventBus.emit('state:changed');
     },
     addXP(amount) {
         this.player.xp += amount;
         eventBus.emit('xp:changed', { xp: this.player.xp, needed: this.player.xpNeeded });
         this.checkLevelUp();
+        eventBus.emit('state:changed');
     },
-    checkLevelUp() { /* логика за ниване, emit 'player:levelup' */ }
-    // ... други методи
+    checkLevelUp() {
+        while (this.player.xp >= this.player.xpNeeded) {
+            this.player.level++;
+            this.player.xp -= this.player.xpNeeded;
+            this.player.xpNeeded = Math.floor(this.player.xpNeeded * 1.28);
+            this.player.maxCrew += 5;
+            this.player.ship.maxHull += 15;
+            this.player.ship.hull = this.player.ship.maxHull;
+            this.player.ship.maxCannons = Math.min(38, this.player.ship.maxCannons + 2);
+            eventBus.emit('player:levelup', this.player.level);
+        }
+    },
+    updateCrew(delta) {
+        this.player.crew = Math.min(this.player.maxCrew, Math.max(1, this.player.crew + delta));
+        eventBus.emit('state:changed');
+    },
+    repairShip(amount) {
+        this.player.ship.hull = Math.min(this.player.ship.maxHull, this.player.ship.hull + amount);
+        eventBus.emit('state:changed');
+    }
 };
-
-// Автоматично запазване при важни промени
-eventBus.on('state:changed', () => { /* saveManager.autoSave() */ });
