@@ -4,6 +4,7 @@ import { gameState } from '../core/gameState.js';
 import { dataLoader } from '../core/dataLoader.js';
 
 let appDiv;
+let logMessages = [];   // съхранение на всички лог съобщения
 
 export function initUI() {
     appDiv = document.getElementById('app');
@@ -17,11 +18,12 @@ export function initUI() {
         hideCombatPanel();
     });
     eventBus.on('combat:defeat', () => {
-        addLog("💀 ПОРАЖЕНИЕ... Корабът е разбит.");
+        addLog("💀 ПОРАЖЕНИЕ...");
         hideCombatPanel();
     });
-    eventBus.on('travel:arrived', (locName) => addLog(`🚢 Пристигнахте в ${locName}.`));
-    eventBus.on('travel:impossible', (reason) => addLog(`❌ Не можете да плавате: ${reason}`));
+    eventBus.on('combat:end', () => hideCombatPanel());
+    eventBus.on('travel:arrived', (msg) => addLog(`🚢 ${msg}`));
+    eventBus.on('travel:impossible', (reason) => addLog(`❌ ${reason}`));
 }
 
 function renderFullUI() {
@@ -46,7 +48,7 @@ function renderFullUI() {
     renderLocationName();
     renderTravelButtons();
     renderPortActions();
-    // Ако вече има активна битка, покажи панела (при зареждане на save)
+    renderLog();   // показва всички запазени съобщения
     if (window._combatActive) showCombatPanel(window._combatActive);
 }
 
@@ -60,7 +62,7 @@ function renderStats() {
         <div class="stat-card"><span>⛵ Кораб</span><span>${gameState.player.ship.name}</span></div>
         <div class="stat-card"><span>🔫 Топове</span><span>${gameState.player.ship.cannons}/${gameState.player.ship.maxCannons}</span></div>
         <div class="stat-card"><span>🛡️ Корпус</span><span>${gameState.player.ship.hull}/${gameState.player.ship.maxHull}</span></div>
-        <div class="stat-card"><span>🍗 Храна / Ром</span><span>${gameState.player.supplies.food} / ${gameState.player.supplies.rum}</span></div>
+        <div class="stat-card"><span>🍗 Храна</span><span>${gameState.player.supplies.food}</span></div>
         <div class="stat-card"><span>📦 Товар</span><span>${getUsedCargo()}/${gameState.player.ship.cargoLimit}</span></div>
     `;
 }
@@ -93,7 +95,6 @@ function renderTravelButtons() {
 function renderPortActions() {
     const actionDiv = document.getElementById('actionButtons');
     if (!actionDiv) return;
-    // Проверка дали локацията е пристанище (поне за демо)
     const currentLoc = dataLoader.locations.find(l => l.id === gameState.world.currentLocation);
     const isPort = currentLoc && currentLoc.type === 'port';
     if (isPort) {
@@ -109,7 +110,7 @@ function renderPortActions() {
                 gameState.setGold(gameState.player.gold - 40);
                 gameState.repairShip(40);
                 addLog("🔧 Корабът е ремонтиран (+40 корпус).");
-            } else addLog("Нямаш 40 злато за ремонт!");
+            } else addLog("Нямаш 40 злато!");
         });
         document.getElementById('hireBtn')?.addEventListener('click', () => {
             if (gameState.player.gold >= 60 && gameState.player.crew < gameState.player.maxCrew) {
@@ -125,14 +126,13 @@ function renderPortActions() {
                 gameState.player.supplies.rum += 20;
                 addLog("🍖 Купихте 40 храна и 20 ром.");
                 eventBus.emit('state:changed');
-            } else addLog("Нужни 90 злато за провизии!");
+            } else addLog("Нужни 90 злато!");
         });
     } else {
         actionDiv.innerHTML = `<button disabled>🏝️ Див бряг - няма услуги</button>`;
     }
 }
 
-// ⚔️ БОЕН ПАНЕЛ
 function showCombatPanel(enemy) {
     window._combatActive = enemy;
     const panel = document.getElementById('combatPanel');
@@ -165,7 +165,6 @@ function hideCombatPanel() {
     window._combatActive = null;
 }
 
-// 💰 ОПРОСТЕНА ТЪРГОВИЯ (може да се разшири)
 function openTradeMenu() {
     const sugarPrice = 14 + Math.floor(Math.random() * 14);
     const spicePrice = 24 + Math.floor(Math.random() * 18);
@@ -196,7 +195,7 @@ function openTradeMenu() {
             gameState.player.cargo[itemKey] = (gameState.player.cargo[itemKey] || 0) + qty;
             addLog(`Купено ${qty} ${item} за ${cost}💰.`);
             eventBus.emit('state:changed');
-        } else addLog("Няма място в трюма или недостатъчно злато!");
+        } else addLog("Няма място или пари!");
     } 
     else if (parts[0] === 'продай' && parts[2]) {
         const item = parts[1];
@@ -208,7 +207,7 @@ function openTradeMenu() {
         else if (item === 'дърво') { price = Math.floor(woodPrice * 0.7); itemKey = 'wood'; }
         else { addLog("Невалидна стока"); return; }
         const have = gameState.player.cargo[itemKey] || 0;
-        if (qty > have) { addLog(`Нямате ${qty} ${item} в трюма!`); return; }
+        if (qty > have) { addLog(`Нямате ${qty} ${item}!`); return; }
         const income = price * qty;
         gameState.setGold(gameState.player.gold + income);
         gameState.player.cargo[itemKey] = have - qty;
@@ -233,13 +232,28 @@ function updateGoldDisplay() {
     if (goldSpan) goldSpan.innerText = Math.floor(gameState.player.gold);
 }
 
+function renderLog() {
+    const logDiv = document.getElementById('gameLog');
+    if (!logDiv) return;
+    logDiv.innerHTML = '';
+    logMessages.forEach(msg => {
+        const line = document.createElement('div');
+        line.innerHTML = msg;
+        logDiv.appendChild(line);
+    });
+    logDiv.scrollTop = logDiv.scrollHeight;
+}
+
 function addLog(msg) {
+    const time = new Date().toLocaleTimeString().slice(0,5);
+    const formatted = `⚓ ${time} ${msg}`;
+    logMessages.push(formatted);
+    if (logMessages.length > 35) logMessages.shift(); // държим последните 35
     const logDiv = document.getElementById('gameLog');
     if (logDiv) {
         const line = document.createElement('div');
-        line.innerHTML = `⚓ ${new Date().toLocaleTimeString().slice(0,5)} ${msg}`;
+        line.innerHTML = formatted;
         logDiv.appendChild(line);
         logDiv.scrollTop = logDiv.scrollHeight;
-        if (logDiv.children.length > 28) logDiv.removeChild(logDiv.firstChild);
     }
 }
