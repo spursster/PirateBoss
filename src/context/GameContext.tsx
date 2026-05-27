@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
-import type { Player, CrewMember, Ship, Quest, PlayerQuest, InventoryItem, Island, VisitedIsland, ViewType }
+import type { Player, CrewMember, Ship, PlayerQuest, InventoryItem, Island, VisitedIsland, ViewType, Enemy }
  from '../types/game';
 
 interface GameContextType {
@@ -28,8 +28,8 @@ interface GameContextType {
   acceptQuest: (questId: string) => Promise<void>;
   updateQuestProgress: (playerQuestId: string, progress: number) => Promise<void>;
   visitIsland: (islandId: string) => Promise<void>;
-  currentEnemy: ReturnType<typeof generateEnemy> | null;
-  setCurrentEnemy: (enemy: ReturnType<typeof generateEnemy> | null) => void;
+  currentEnemy: Enemy | null;
+  setCurrentEnemy: (enemy: Enemy | null) => void;
   battleLog: string[];
   addBattleLog: (message: string) => void;
   clearBattleLog: () => void;
@@ -47,7 +47,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const [visitedIslands, setVisitedIslands] = useState<VisitedIsland[]>([]);
   const [currentView, setCurrentView] = useState<ViewType>('map');
   const [isLoading, setIsLoading] = useState(true);
-  const [currentEnemy, setCurrentEnemy] = useState<ReturnType<typeof generateEnemy> | null>(null);
+  const [currentEnemy, setCurrentEnemy] = useState<Enemy | null>(null);
   const [battleLog, setBattleLog] = useState<string[]>([]);
 
   const addBattleLog = useCallback((message: string) => {
@@ -138,7 +138,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     return { error: null };
   }, [loadGameData]);
 
-  const signUp = useCallback(async (email: string, password: string, captainName: string) => {
+  const signUp = useCallback(async (email: string, password: string, _captainName: string) => {
     const { error: signUpError } = await supabase.auth.signUp({ email, password });
     if (signUpError) return { error: signUpError };
 

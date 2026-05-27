@@ -1,5 +1,5 @@
 import { useGame } from '../context/GameContext';
-import { Anchor, Gem, AlertTriangle, Heart, Coins, Navigation as NavIcon } from 'lucide-react';
+import { Anchor, Gem, AlertTriangle, Heart, Coins } from 'lucide-react';
 import { getIslandTypeColor } from '../utils/gameUtils';
 import { useState } from 'react';
 import type { Island } from '../types/game';

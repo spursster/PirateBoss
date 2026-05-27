@@ -1,6 +1,6 @@
 import { useGame } from '../context/GameContext';
 import { supabase } from '../lib/supabase';
-import { ShoppingBag, Swords, Shield, Heart, Package, Coins, ArrowLeftRight } from 'lucide-react';
+import { Package, Coins, ArrowLeftRight } from 'lucide-react';
 import { useState } from 'react';
 
 const SHOP_ITEMS = [
@@ -16,15 +16,8 @@ const SHOP_ITEMS = [
   { name: 'Captain\'s Hat', type: 'armor', rarity: 'rare', cost: 350, stats: { defense: 6, speed: 2 }, description: '+6 Defense, +2 Speed' },
 ];
 
-const RESOURCES = [
-  { name: 'Food', icon: '🍖', sellPrice: 5 },
-  { name: 'Rum', icon: '🥃', sellPrice: 10 },
-  { name: 'Wood', icon: '🪵', sellPrice: 3 },
-  { name: 'Scrap', icon: '⚙️', sellPrice: 2 },
-];
-
 export function ShopView() {
-  const { player, inventory, addItem, updatePlayer, islands, currentView, player: gamePlayer } = useGame();
+  const { player, inventory, addItem, updatePlayer, islands } = useGame();
   const [tab, setTab] = useState<'buy' | 'sell'>('buy');
 
   if (!player) return null;
@@ -40,7 +33,7 @@ export function ShopView() {
       item_type: item.type,
       quantity: 1,
       rarity: item.rarity as 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary',
-      stats: item.stats,
+      stats: item.stats as unknown as Record<string, number>,
       description: item.description,
       equipped: false,
     });

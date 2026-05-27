@@ -1,4 +1,4 @@
-import type { Player, Enemy } from '../types/game';
+import type { Enemy } from '../types/game';
 
 export const EXPERIENCE_PER_LEVEL = 100;
 export const LEVEL_SCALING = 1.5;

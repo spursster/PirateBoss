@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useGame } from '../context/GameContext';
-import { Users, Plus, Heart, Swords, Shield, Zap, X, Check } from 'lucide-react';
+import { Users, Plus, Heart, Swords, Shield, Zap, X } from 'lucide-react';
 import type { CrewMember } from '../types/game';
 
 const CREW_NAMES = [

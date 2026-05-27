@@ -3,21 +3,12 @@ import { supabase } from '../lib/supabase';
 import { Ship, Anchor, Zap, Swords, Shield, Package, Edit2, Check } from 'lucide-react';
 import { useState } from 'react';
 
-const SHIP_TYPES = [
-  { name: 'Sloop', speed: 10, hull: 100, cannons: 4, cargo: 50, cost: 0 },
-  { name: 'Brigantine', speed: 12, hull: 150, cannons: 8, cargo: 100, cost: 500 },
-  { name: 'Frigate', speed: 15, hull: 250, cannons: 16, cargo: 200, cost: 2000 },
-  { name: 'Galleon', speed: 8, hull: 400, cannons: 24, cargo: 400, cost: 5000 },
-];
-
 export function ShipView() {
   const { player, ships, updatePlayer, setView } = useGame();
   const [editing, setEditing] = useState<string | null>(null);
   const [editName, setEditName] = useState('');
 
   if (!player) return null;
-
-  const flagship = ships.find(s => s.is_flagship) || ships[0];
 
   const handleRename = async (shipId: string) => {
     if (!editName.trim()) return;
@@ -44,7 +35,6 @@ export function ShipView() {
       ) : (
         <div className="space-y-4">
           {ships.map(ship => {
-            const shipType = SHIP_TYPES.find(t => t.name.toLowerCase() === ship.type) || SHIP_TYPES[0];
             const hullPercent = (ship.hull / ship.max_hull) * 100;
 
             return (

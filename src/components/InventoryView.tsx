@@ -1,5 +1,5 @@
 import { useGame } from '../context/GameContext';
-import { Package, Trash2, Shield, Swords, Heart, Zap, Plus, Star } from 'lucide-react';
+import { Package, Trash2, Shield, Swords, Heart, Zap, Star } from 'lucide-react';
 import { getRarityColor } from '../utils/gameUtils';
 import type { InventoryItem } from '../types/game';
 

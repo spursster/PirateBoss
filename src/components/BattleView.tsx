@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useGame } from '../context/GameContext';
-import { Swords, Shield, Heart, Zap, Coins, Star, Skull, AlertTriangle } from 'lucide-react';
+import { Swords, Shield, Zap, Coins, Star, Skull } from 'lucide-react';
 import { calculateDamage, generateLoot, getRarityColor, calculateLevelFromXP } from '../utils/gameUtils';
-import type { Enemy } from '../types/game';
 
 export function BattleView() {
   const {

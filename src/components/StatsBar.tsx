@@ -3,7 +3,7 @@ import { Coins, Heart, Zap, Shield, Sword, Star, Anchor } from 'lucide-react';
 import { formatGold, calculateLevelFromXP } from '../utils/gameUtils';
 
 export function StatsBar() {
-  const { player, setView, currentView, signOut } = useGame();
+  const { player, signOut } = useGame();
 
   if (!player) return null;
 

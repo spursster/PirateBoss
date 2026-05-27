@@ -1,11 +1,11 @@
 import { useGame } from '../context/GameContext';
 import { supabase } from '../lib/supabase';
-import { Scroll, Map, Swords, Gem, Star, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
+import { Scroll, Map, Swords, Gem, Star, CheckCircle, Clock } from 'lucide-react';
 import { getDifficultyColor } from '../utils/gameUtils';
 import type { PlayerQuest } from '../types/game';
 
 export function QuestView() {
-  const { player, quests, islands, acceptQuest, updateQuestProgress, updatePlayer } = useGame();
+  const { player, quests, acceptQuest, updatePlayer } = useGame();
 
   const questTypeIcons = {
     exploration: Map,
@@ -66,7 +66,6 @@ export function QuestView() {
 
               const Icon = questTypeIcons[quest.quest_type as keyof typeof questTypeIcons] || Scroll;
               const progressPercent = (playerQuest.progress / quest.objective_target) * 100;
-              const isComplete = playerQuest.status === 'completed';
 
               return (
                 <div
