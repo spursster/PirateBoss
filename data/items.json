@@ -1,0 +1,6 @@
+[
+  { "id": "sugar", "name": "Захар", "basePrice": 14, "volume": 1 },
+  { "id": "spice", "name": "Подправки", "basePrice": 25, "volume": 1 },
+  { "id": "silk", "name": "Коприна", "basePrice": 75, "volume": 2 },
+  { "id": "wood", "name": "Дърво за ремонт", "basePrice": 8, "volume": 1 }
+]
